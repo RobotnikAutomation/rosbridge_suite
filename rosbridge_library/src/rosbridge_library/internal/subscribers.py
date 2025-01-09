@@ -32,7 +32,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from threading import Lock
-from rospy import Subscriber, logerr
+from rospy import Subscriber, logerr, loginfo
 from rostopic import get_topic_type
 from rosbridge_library.internal import ros_loader, message_conversion
 from rosbridge_library.internal.topics import TopicNotEstablishedException
@@ -95,7 +95,8 @@ class MultiSubscriber():
         self.lock = Lock()
         self.topic = topic
         self.msg_class = msg_class
-        self.subscriber = Subscriber(topic, msg_class, self.callback)
+        loginfo("Subscribing to %s with message type %s", topic, msg_class)
+        self.subscriber = Subscriber(topic, msg_class, self.callback, queue_size=1)
 
     def unregister(self):
         self.subscriber.unregister()
